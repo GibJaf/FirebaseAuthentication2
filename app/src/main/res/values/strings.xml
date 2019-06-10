@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">FirebaseAuthentication2</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="loginButton">Login</string>
+    <string name="goToSignUp_button">Don\'t have an account ? Sign up</string>
+    <string name="signUpButton">Sign up</string>
+    <string name="goToLogin_button">Already have an accout ? Login</string>
 </resources>
