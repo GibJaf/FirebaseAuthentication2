@@ -1,5 +1,6 @@
 package com.example.firebaseauthentication2;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.i("Sign in status"," Successful");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(MainActivity.this,user.getEmail()+" has been authenticated ",Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this,LoggedIn.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(MainActivity.this, "Authentication failed.",
@@ -84,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.loginButton).setOnClickListener(this);
+
+        startActivity(new Intent(MainActivity.this,SignInActivity.class));
     }
 
     @Override
