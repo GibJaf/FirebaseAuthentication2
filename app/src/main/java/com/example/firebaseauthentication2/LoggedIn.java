@@ -8,11 +8,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -35,11 +40,13 @@ public class LoggedIn extends AppCompatActivity{
 
     private static final int CHOOSE_IMAGE = 101;
     EditText displayName;
+    TextView emailVerify;
     ImageView profilePic;
     Uri uriProfileImage;
     ProgressBar imageProgressBar;
     String profileImageUrl;
     FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +54,12 @@ public class LoggedIn extends AppCompatActivity{
         setContentView(R.layout.activity_logged_in);
 
         displayName = findViewById(R.id.displayNameEditText);
+        emailVerify = findViewById(R.id.textViewVerified);
         profilePic = findViewById(R.id.profilePicImageVIew);
         imageProgressBar = findViewById(R.id.imageProgressBar);
         mAuth = FirebaseAuth.getInstance();
+        Toolbar toolbar = findViewById(R.id.menuToolBar);
+        setSupportActionBar(toolbar);
         
         loadUserInformation();
 
@@ -79,7 +89,7 @@ public class LoggedIn extends AppCompatActivity{
     }
 
     private void loadUserInformation() {
-        FirebaseUser user = mAuth.getCurrentUser();
+        final FirebaseUser user = mAuth.getCurrentUser();
 
         if(user!=null){
             if(user.getPhotoUrl()!=null){
@@ -89,6 +99,23 @@ public class LoggedIn extends AppCompatActivity{
             }
             if(user.getDisplayName()!=null){
                 displayName.setText(user.getDisplayName());
+            }
+
+            if(user.isEmailVerified())
+                emailVerify.setText("Email verified");
+            else {
+                emailVerify.setText("Email not verified . (Click to verify)");
+                emailVerify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(LoggedIn.this,"Verification email sent",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
             }
         }
 
@@ -174,4 +201,22 @@ public class LoggedIn extends AppCompatActivity{
         startActivityForResult(Intent.createChooser(intent,"Selet Profile Image"),CHOOSE_IMAGE);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menuLogout:
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                startActivity(new Intent(LoggedIn.this,MainActivity.class));
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflator = getMenuInflater();
+        inflator.inflate(R.menu.menu,menu);
+        return true;
+    }
 }
