@@ -6,4 +6,7 @@
     <string name="goToSignUp_button">Don\'t have an account ? Sign up</string>
     <string name="signUpButton">Sign up</string>
     <string name="goToLogin_button">Already have an accout ? Login</string>
+    <string name="cameraPointerTextView">Click on camera to choose profile photo</string>
+    <string name="displayName_hint">Enter display name</string>
+    <string name="saveButton">Save</string>
 </resources>
